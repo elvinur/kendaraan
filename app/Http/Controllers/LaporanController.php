@@ -19,7 +19,8 @@ class LaporanController extends Controller
 {
     public function index()
     {
-        return view('laporan.index');
+        $pegawais = Pegawai::select(['id', 'nama', 'nip'])->get();
+        return view('laporan.index', compact('pegawais'));
     }
 
     public function kendaraanPdf(){
@@ -37,7 +38,7 @@ class LaporanController extends Controller
     public function kendaraanExcel(){
 
         return \Excel::download(new KendaraanExport,'laporan_kendaraan.xlsx');
-       
+
     }
 
 
@@ -56,21 +57,33 @@ class LaporanController extends Controller
     public function pegawaiExcel(){
 
         return \Excel::download(new PegawaiExport,'laporan_pegawai.xlsx');
-       
-    }
-    public function pajakPdf(){
 
+    }
+    public function pajakPdf()
+    {
         //set font pdf
         \PDF::setOptions(['dpi' => '150','defaultFont' => 'sans-serif']);
 
-        $pajak = Pajak::get();
+        $pegawai = request()->get('pegawai_id', null);
+        $pajak = Pajak::whereHas('pegawai', function ($query) use ($pegawai) {
+            return $query->where('pegawai_id', $pegawai);
+        })->get();
 
-        $pdf = \PDF::loadView('laporan.pajakPdf',compact('pajak'))->setPaper('f4', 'landscape');;
-        // return $pdf->stream('laporan_buku.pdf');
-        return $pdf->download('laporan_pajak.pdf');
+        $namaFile[] = 'laporan_pajak';
+        $namaFile[] = date('Ymd');
+        if ($pegawai) {
+            $dataPegawai = Pegawai::find($pegawai);
+            $namaFile[] = \Illuminate\Support\Str::snake($dataPegawai->nama);
+        }
+
+        $namaPdf  = implode('-', $namaFile);
+        $namaPdf .= '.pdf';
+        $pdf = \PDF::loadView('laporan.pajakPdf', compact('pajak'))->setPaper('f4', 'landscape');
+
+        return $pdf->download($namaPdf);
     }
 
-    
+
 
 
 

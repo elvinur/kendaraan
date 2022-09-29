@@ -13,11 +13,11 @@ class Pajak extends Model
     public $timestamps = false;
 
     public function kendaraan(){
-        return $this->hasOne(Kendaraan::class);
+        return $this->belongsTo(Kendaraan::class);
      }
 
      public function pegawai(){
-        return $this->hasOne(Pegawai::class);
+        return $this->belongsTo(Pegawai::class);
      }
 
      public function user(){

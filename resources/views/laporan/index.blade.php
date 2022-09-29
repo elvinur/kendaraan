@@ -28,32 +28,58 @@
                                  <i class="ni ni-cloud-download-95"></i> Export Excel</a>
                             </section>
                             <br>
-                            
-                            <div class="card-text mb-2"><i class="ni ni-book-bookmark"></i>Laporan Pajak</div>                           
+
+                            <div class="card-text mb-2"><i class="ni ni-book-bookmark"></i>Laporan Pajak</div>
                             <select name="pegawai_id" id="select_pegawai" class="form-control" value="{{ old('nama') }}">
-                                <option disabled selected>-- Pilih Nama Pemegang --</option>
+                                <option value="">-- Pilih Nama Pemegang --</option>
+                                @foreach ($pegawais as $pegawai)
+                                    <option value="{{$pegawai->id}}">{{$pegawai->nip}} - {{$pegawai->nama}}</option>
+                                @endforeach
                             </select>
                             <section class="kendaraan">
-                                <a class="btn btn-danger " href="{{ route('pajak.pdf') }}" target="_blank"><i class="ni ni-cloud-download-95"></i> Export Pdf</a>
+                                <a class="btn btn-danger btn-export-pdf" href="{{ route('pajak.pdf') }}" target="_blank"><i class="ni ni-cloud-download-95"></i> Export Pdf</a>
                                 <!-- <a class="btn btn-success" href="{{ route('buku.excel') }}" target="_blank"> -->
                                  <!-- <i class="ni ni-cloud-download-95"></i> Export Excel</a> -->
                             </section>
                             <br>
                             <div class="card-text mb-2"><i class="ni ni-book-bookmark"></i>Laporan Service</div>
                             <section class="kendaraan">
-                                <a class="btn btn-danger " href="{{ route('kendaraan.pdf') }}" target="_blank"><i class="ni ni-cloud-download-95"></i> Export Pdf</a>
+                                <a class="btn btn-danger btn-export-pdf" href="{{ route('kendaraan.pdf') }}" target="_blank"><i class="ni ni-cloud-download-95"></i> Export Pdf</a>
                                 <!-- <a class="btn btn-success" href="{{ route('buku.excel') }}" target="_blank"> -->
                                  <!-- <i class="ni ni-cloud-download-95"></i> Export Excel</a> -->
                             </section>
                             <br>
                             <div class="card-text mb-2"><i class="ni ni-book-bookmark"></i>Laporan Pembelian BBM</div>
                             <section class="kendaraan">
-                                <a class="btn btn-danger " href="{{ route('kendaraan.pdf') }}" target="_blank"><i class="ni ni-cloud-download-95"></i> Export Pdf</a>
+                                <a class="btn btn-danger btn-export-pdf" href="{{ route('kendaraan.pdf') }}" target="_blank"><i class="ni ni-cloud-download-95"></i> Export Pdf</a>
                                 <!-- <a class="btn btn-success" href="{{ route('buku.excel') }}" target="_blank"> -->
                                  <!-- <i class="ni ni-cloud-download-95"></i> Export Excel</a> -->
                             </section>
                           </div>
-              </div>          
+              </div>
         </div>
     </div>
 @endsection
+
+@push('script')
+<script>
+    var pageJs = {
+        init: function () {
+            jQuery(document).on("click", ".btn-export-pdf", function (e) {
+                e.preventDefault();
+
+                let baseUrl = jQuery(this).attr("href");
+                let pegawai_id = jQuery("#select_pegawai").val();
+                if (pegawai_id) {
+                    baseUrl += "?pegawai_id="+pegawai_id;
+                }
+                window.open(baseUrl, '_blank');
+            });
+        },
+    };
+
+    jQuery(function () {
+        pageJs.init();
+    });
+</script>
+@endpush

@@ -11,7 +11,7 @@
             text-align: center;
         }
         .container{
-           
+
         }
         .text-right{
             text-align: right;
@@ -22,25 +22,25 @@
         .page-break{
             page-break-after: always;
         }
-        
+
         .pagenum:before{
                 content: counter(page);
         }
-    
+
     </style>
 </head>
 <body>
     <h4 class="text-center">Laporan Pajak</h4>
     <div class="text-right mb">
-        
+
         <span>Tanggal : {{ date('d-M-Y') }}</span>/
         <span>Jam : {{ date('H:i') }}</span><br>
         Halaman: <span class="pagenum"></span>
 
     </div>
-   
+
     <div class="container">
-        <table border="1" cellspacing="0" cellpadding="15">
+        <table border="1" cellspacing="0" cellpadding="15" width="100%">
             <thead>
                 <tr>
                     <th>No</th>
@@ -54,21 +54,21 @@
                 @php
                     $i=1;
                 @endphp
-                @foreach ($pajak as $item) 
+                @foreach ($pajak as $item)
                 <tr>
                     <td>{{ $i++ }}</td>
                     <!-- <td>{{ $item->pegawai->nama }}</td>
                     <td>{{ $item->kendaraan->jenis }}</td>
                     <td>{{ $item->kendaraan->no_polisi }}</td> -->
-                    <td>{{ $item->nominal }}</td>
-                
+                    <td class="text-right">Rp {{ number_format($item->nominal, 2, ',', '.') }}</td>
+
                 </tr>
                 @endforeach
             </tbody>
         </table>
-        <!-- <p>Petugas: {{ Auth::user()->level }}</p> -->
+        <!-- <p>Petugas: {{ Auth::guard('pegawai')->user()->nama }}</p> -->
         <span></span>
     </div>
- 
+
 </body>
 </html>
